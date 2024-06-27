@@ -41,3 +41,35 @@ export async function updateUsername(prevState: any, formData: FormData) {
     throw e;
   }
 }
+
+export async function createCommunity(prevState: any, formData: FormData) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) {
+    return redirect("/api/auth/login");
+  }
+
+  try {
+    const name = formData.get("name") as string;
+
+    const data = await prisma.subreddit.create({
+      data: {
+        name: name,
+        userId: user.id,
+      },
+    });
+
+    redirect('/');
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === "P2002") {
+        return {
+          message: "Subreddit alredy exist",
+          status: "error",
+        };
+      }
+    }
+    throw e;
+  }
+}
