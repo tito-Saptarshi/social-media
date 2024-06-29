@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import prisma from "./lib/db";
 import { Prisma } from "@prisma/client";
 
-
 export async function updateUsername(prevState: any, formData: FormData) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
@@ -60,7 +59,7 @@ export async function createCommunity(prevState: any, formData: FormData) {
       },
     });
 
-    redirect('/');
+    redirect("/");
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
@@ -71,5 +70,37 @@ export async function createCommunity(prevState: any, formData: FormData) {
       }
     }
     throw e;
+  }
+}
+
+export async function updateSubDescription(prevState: any, formData: FormData) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) {
+    return redirect("/api/auth/login");
+  }
+  try {
+    const subName = formData.get("subName") as string;
+    const description = formData.get("description") as string;
+
+    await prisma.subreddit.update({
+      where: {
+        name: subName,
+      },
+      data: {
+        description: description,
+      },
+    });
+
+    return {
+      status: "green",
+      message: "Succesfully updated the description!",
+    };
+  } catch (e) {
+    return {
+      status: "error",
+      message: "Sorry something went wrong!",
+    };
   }
 }
