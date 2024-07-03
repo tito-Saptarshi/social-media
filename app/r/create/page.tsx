@@ -47,7 +47,7 @@ export default function SubredditPage() {
 
           <Input
             name="name"
-            required
+            required 
             className="pl-6"
             minLength={2}
             maxLength={21}

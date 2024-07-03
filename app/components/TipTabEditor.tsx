@@ -1,0 +1,47 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { EditorContent, useEditor, type Editor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+
+export const Menubar = ({ editor }: { editor: Editor | null }) => {
+  if (!editor) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-wrap gap-5 mt-5">
+      <Button
+        type="button"
+        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+        variant={
+          editor.isActive("heading", { level: 1 }) ? "default" : "secondary"
+        }
+      >
+        H1
+      </Button>
+    </div>
+  );
+};
+
+export function TipTapEditor() {
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: "<p>Hello world</p>",
+    editorProps: {
+      attributes: {
+        class: "prose",
+      },
+    },
+  });
+
+  return (
+    <div>
+      <Menubar editor={editor} />
+      <EditorContent
+        editor={editor}
+        className="rounded-lg border p-2 min-h-[150px] mt-2"
+      />
+    </div>
+  );
+}

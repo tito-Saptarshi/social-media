@@ -1,9 +1,13 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import pfp from "../../../../public/pfp.png";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { Tabs, TabsList } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Text, Video } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { TipTapEditor } from "@/app/components/TipTabEditor";
 
 const rules = [
   {
@@ -42,8 +46,27 @@ export default function CreatePostRoute({
             r/{params.id}
           </Link>
         </h1>
-        <Tabs defaultValue="account" className="w-full">
-          <TabsList className="grid w-full grid-cols-2"></TabsList>
+        <Tabs defaultValue="post" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="post">
+              <Text className="h-4 w-4 mr-2" />
+              Post
+            </TabsTrigger>
+            <TabsTrigger value="image">
+              <Video className="h-4 w-4 mr-2" /> Image and Video
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="post">
+            <Card>
+              <form>
+                <CardHeader>
+                  <Label>Title</Label>
+                  <Input required name="title" placeholder="Title" />
+                  <TipTapEditor />
+                </CardHeader>
+              </form>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
 
