@@ -104,3 +104,15 @@ export async function updateSubDescription(prevState: any, formData: FormData) {
     };
   }
 }
+
+export async function createPost() {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) {
+    return redirect("/api/auth/login");
+  }
+
+  
+
+}

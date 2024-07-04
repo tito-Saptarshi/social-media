@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import pfp from "../../../../public/pfp.png";
@@ -9,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TipTapEditor } from "@/app/components/TipTabEditor";
 import { SubmitButton } from "@/app/components/SubmitButtons";
+import { UploadDropzone } from "@/app/components/Uploadthing";
 
 const rules = [
   {
@@ -66,7 +69,7 @@ export default function CreatePostRoute({
                   <TipTapEditor />
                 </CardHeader>
                 <CardFooter>
-                  <SubmitButton text="Create Post" /> 
+                  <SubmitButton text="Create Post" />
                 </CardFooter>
               </form>
             </Card>
@@ -74,7 +77,16 @@ export default function CreatePostRoute({
           <TabsContent value="image">
             <Card>
               <CardHeader>
-                <h1>Image upload</h1>
+                <UploadDropzone
+                  className="ut-button:bg-primary ut-button:ut-readying:bg-primary/50 ut-label:text-primary ut-button:ut-uploading:bg-primary/50 ut-button:ut-uploading:after:bg-primary"
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res) => {
+                    console.log(res);
+                  }}
+                  onUploadError={(error: Error) => {
+                    alert("Error");
+                  }}
+                />
               </CardHeader>
             </Card>
           </TabsContent>
