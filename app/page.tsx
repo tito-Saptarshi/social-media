@@ -5,10 +5,13 @@ import HelloImage from "../public/hero-image.png";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { CreatePostCard } from "./components/CreatePostCard";
 export default function Home() {
   return (
     <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10">
-      <div className="w-[65%] flex flex-col gap-y-5">Reddit</div>
+      <div className="w-[65%] flex flex-col gap-y-5">
+        <CreatePostCard />
+      </div>
       <div className="w-[35%]">
         <Card>
           <Image src={Banner} alt="Banner" />
