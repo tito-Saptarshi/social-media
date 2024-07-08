@@ -133,3 +133,14 @@ export async function createPost(
 
   return redirect("/");
 }
+
+export async function handleVote() {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) {
+    return redirect("/api/auth/login");
+  }
+
+  
+}
