@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { CopyLink } from "./CopyLink";
 import { handleVote } from "../actions";
+import { DownVote, UpVote } from "./SubmitButtons";
+import { RendertoJson } from "./RendertoJson";
 
 interface iAppProps {
   title: string;
@@ -31,17 +33,13 @@ export function PostCard({
         <form action={handleVote}>
           <input type="hidden" name="voteDirection" value="UP" />
           <input type="hidden" name="postId" value={id} />
-          <Button variant="outline" size="sm" type="submit">
-            <ArrowUp className="h-4 w-4" />
-          </Button>
+          <UpVote />
         </form>
         {voteCount}
         <form action={handleVote}>
           <input type="hidden" name="voteDirection" value="DOWN" />
           <input type="hidden" name="postId" value={id} />
-          <Button variant="outline" size="sm" type="submit">
-            <ArrowDown className="h-4 w-4" />
-          </Button>
+          <DownVote />
         </form>
       </div>
 
@@ -61,7 +59,7 @@ export function PostCard({
           </Link>
         </div>
         <div className="max-h-[300px] overflow-hidden">
-          {imageString && (
+          {imageString ? (
             <Image
               src={imageString}
               alt="Post Image"
@@ -69,7 +67,18 @@ export function PostCard({
               height={300}
               className="w-full h-full"
             />
+          ) : (
+            <RendertoJson />
           )}
+          {/* {imageString && (
+            <Image
+              src={imageString}
+              alt="Post Image"
+              width={600}
+              height={300}
+              className="w-full h-full"
+            />
+          )} */}
         </div>
 
         <div className="m-3 flex items-center gap-x-5">

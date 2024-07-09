@@ -23,6 +23,13 @@ async function getData() {
         },
       },
       subName: true,
+      Vote: {
+        select: {
+          userId: true,
+          voteType: true,
+          postId: true,
+        },
+      },
     },
   });
 
@@ -44,7 +51,11 @@ export default async function Home() {
             subName={post.subName as string}
             title={post.title}
             userName={post.User?.userName as string}
-            voteCount={0}
+            voteCount={post.Vote.reduce((acc, vote) => {
+              if (vote.voteType === "UP") return acc + 1;
+              if (vote.voteType === "DOWN") return acc - 1;
+              return acc;
+            }, 0)}
           />
         ))}
       </div>
