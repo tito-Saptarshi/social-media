@@ -35,6 +35,7 @@ export function SubDescriptionForm({ description, subName }: iAppProps) {
       });
     }
   }, [state, toast]);
+  
   return (
     <form className="mt-5" action={formAction}>
       <input type="hidden" name="subName" value={subName} />

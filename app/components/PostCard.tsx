@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUp, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { CopyLink } from "./CopyLink";
+import { handleVote } from "../actions";
 
 interface iAppProps {
   title: string;
@@ -12,6 +13,7 @@ interface iAppProps {
   subName: string;
   userName: string;
   imageString: string | null;
+  voteCount: number;
 }
 
 export function PostCard({
@@ -21,18 +23,23 @@ export function PostCard({
   subName,
   title,
   userName,
+  voteCount,
 }: iAppProps) {
   return (
     <Card className="flex relative gap-y-2 overflow-hidden">
       <div className="flex flex-col items-center gap-y-2 bg-muted p-2">
-        <form>
-          <Button variant="outline" size="sm">
+        <form action={handleVote}>
+          <input type="hidden" name="voteDirection" value="UP" />
+          <input type="hidden" name="postId" value={id} />
+          <Button variant="outline" size="sm" type="submit">
             <ArrowUp className="h-4 w-4" />
           </Button>
         </form>
-        0
-        <form>
-          <Button variant="outline" size="sm">
+        {voteCount}
+        <form action={handleVote}>
+          <input type="hidden" name="voteDirection" value="DOWN" />
+          <input type="hidden" name="postId" value={id} />
+          <Button variant="outline" size="sm" type="submit">
             <ArrowDown className="h-4 w-4" />
           </Button>
         </form>

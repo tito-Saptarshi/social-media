@@ -44,6 +44,7 @@ export default async function Home() {
             subName={post.subName as string}
             title={post.title}
             userName={post.User?.userName as string}
+            voteCount={0}
           />
         ))}
       </div>
