@@ -68,7 +68,7 @@ export function PostCard({
               className="w-full h-full"
             />
           ) : (
-            <RendertoJson />
+            <RendertoJson data={jsonContent}/>
           )}
           {/* {imageString && (
             <Image
