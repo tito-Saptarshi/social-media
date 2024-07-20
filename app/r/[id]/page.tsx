@@ -1,5 +1,6 @@
 import { updateSubDescription } from "@/app/actions";
 import { CreatePostCard } from "@/app/components/CreatePostCard";
+import Pagination from "@/app/components/Pagination";
 import { PostCard } from "@/app/components/PostCard";
 import { SubDescriptionForm } from "@/app/components/SubDescriptionForm";
 import { SaveButton, SubmitButton } from "@/app/components/SubmitButtons";
@@ -15,18 +16,26 @@ import Image from "next/image";
 import Link from "next/link";
 
 async function getData(name: string) {
-  const data = await prisma.subreddit.findUnique({
-    where: {
-      name: name,
-    },
-    select: {
-      name: true,
-      createdAt: true,
-      description: true,
-      userId: true,
-      posts: {
-        select: {
-          title: true,
+  const [count, data] = await prisma.$transaction([
+    prisma.post.count({
+      where: {
+        subName: name,
+      },
+    }),
+
+    prisma.subreddit.findUnique({
+      where: {
+        name: name,
+      },
+
+      select: {
+        name: true,
+        createdAt: true,
+        description: true,
+        userId: true,
+        posts: {
+          select: {
+            title: true,
             imageString: true,
             id: true,
             textContent: true,
@@ -39,13 +48,15 @@ async function getData(name: string) {
             User: {
               select: {
                 userName: true,
-              }
-            }
-        }
-      }
-    },
-  });
-  return data;
+              },
+            },
+          },
+        },
+      },
+    }),
+  ]);
+
+  return { data, count };
 }
 
 export default async function SubRedditRoute({
@@ -53,33 +64,34 @@ export default async function SubRedditRoute({
 }: {
   params: { id: string };
 }) {
-  const data = await getData(params.id);
+  const { data, count } = await getData(params.id);
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  // console.log(data?.posts);   // log checker
-  
+
   return (
     <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10 ">
       <div className="w-[65%] flex flex-col gap-y-5">
         <CreatePostCard />
 
         {data?.posts.map((post) => (
-           <PostCard
-           key={post.id}
-           id={post.id}
-           imageString={post.imageString}
-           subName={data.name}
-           title={post.title}
-           userName={post.User?.userName as string}
-           jsonContent={post.textContent}
-           voteCount={post.Vote.reduce((acc, vote) => {
-             if (vote.voteType === "UP") return acc + 1;
-             if (vote.voteType === "DOWN") return acc - 1;
+          <PostCard
+            key={post.id}
+            id={post.id}
+            imageString={post.imageString}
+            subName={data.name}
+            title={post.title}
+            userName={post.User?.userName as string}
+            jsonContent={post.textContent}
+            voteCount={post.Vote.reduce((acc, vote) => {
+              if (vote.voteType === "UP") return acc + 1;
+              if (vote.voteType === "DOWN") return acc - 1;
 
-             return acc;
-           }, 0)}
-         />
+              return acc;
+            }, 0)}
+          />
         ))}
+
+        <Pagination />
       </div>
 
       <div className="w-[35%]">
@@ -110,8 +122,8 @@ export default async function SubRedditRoute({
               </p>
             )}
             <div className="flex items-center gap-x-2 mt-4">
-            <Cake className="h-5 w-5 text-muted-foreground" />
-            <p className="text-muted-foreground font-medium text-sm">
+              <Cake className="h-5 w-5 text-muted-foreground" />
+              <p className="text-muted-foreground font-medium text-sm">
                 Created:{" "}
                 {new Date(data?.createdAt as Date).toLocaleDateString("en-us", {
                   weekday: "long",
@@ -122,7 +134,7 @@ export default async function SubRedditRoute({
               </p>
             </div>
             <Separator className="my-5" />
-            <Button  asChild className="rounded-full w-full">
+            <Button asChild className="rounded-full w-full">
               <Link
                 href={user?.id ? `/r/${data?.name}/create` : "/api/auth/login"}
               >
