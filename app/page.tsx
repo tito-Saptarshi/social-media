@@ -15,6 +15,7 @@ import Pagination from "./components/Pagination";
 async function getData(searchParam: String) {
   const [count, data] = await prisma.$transaction([
     prisma.post.count(),
+    
     prisma.post.findMany({
       take: 10,
       skip: searchParam ? (Number(searchParam) - 1) * 10 : 0,

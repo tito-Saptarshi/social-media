@@ -36,6 +36,9 @@ async function getData(name: string, searchParam: string) {
         posts: {
           take: 10,
           skip: searchParam ? (Number(searchParam) - 1) * 10 : 0,
+          orderBy: {
+            createdAt: "desc", 
+          },
           select: {
             title: true,
             imageString: true,
