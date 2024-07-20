@@ -15,7 +15,7 @@ import { Cake } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-async function getData(name: string) {
+async function getData(name: string, searchParam: string) {
   const [count, data] = await prisma.$transaction([
     prisma.post.count({
       where: {
@@ -34,6 +34,8 @@ async function getData(name: string) {
         description: true,
         userId: true,
         posts: {
+          take: 10,
+          skip: searchParam ? (Number(searchParam) - 1) * 10 : 0,
           select: {
             title: true,
             imageString: true,
@@ -61,10 +63,12 @@ async function getData(name: string) {
 
 export default async function SubRedditRoute({
   params,
+  searchParams,
 }: {
   params: { id: string };
+  searchParams: { page: string };
 }) {
-  const { data, count } = await getData(params.id);
+  const { data, count } = await getData(params.id, searchParams.page);
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -91,7 +95,7 @@ export default async function SubRedditRoute({
           />
         ))}
 
-        <Pagination />
+        <Pagination totalPages={Math.ceil(count / 10)} />
       </div>
 
       <div className="w-[35%]">
