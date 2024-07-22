@@ -54,7 +54,7 @@ export function PostCard({
         </div>
 
         <div className="px-2">
-          <Link href="/">
+          <Link href={`/post/${id}`}>
             <h1 className="font-medium mt-1 text-lg">{title}</h1>
           </Link>
         </div>
@@ -68,7 +68,7 @@ export function PostCard({
               className="w-full h-full"
             />
           ) : (
-            <RendertoJson data={jsonContent}/>
+            <RendertoJson data={jsonContent} />
           )}
           {/* {imageString && (
             <Image

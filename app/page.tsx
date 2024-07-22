@@ -15,7 +15,7 @@ import Pagination from "./components/Pagination";
 async function getData(searchParam: String) {
   const [count, data] = await prisma.$transaction([
     prisma.post.count(),
-    
+
     prisma.post.findMany({
       take: 10,
       skip: searchParam ? (Number(searchParam) - 1) * 10 : 0,
@@ -57,7 +57,7 @@ export default function Home({
     <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10">
       <div className="w-[65%] flex flex-col gap-y-5">
         <CreatePostCard />
-        <Suspense fallback={<SuspenseCard />}>
+        <Suspense fallback={<SuspenseCard />} key={searchParams.page}>
           <ShowItems searchParams={searchParams} />
         </Suspense>
       </div>
