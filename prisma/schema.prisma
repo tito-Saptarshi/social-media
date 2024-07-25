@@ -15,17 +15,18 @@ datasource db {
 }
 
 model User {
-  id                String      @id
-  email             String
-  firstName         String
-  lastName          String
-  imageUrl          String?
-  userName          String?     @unique
-  createdSubreddits Subreddit[]
-  createdAt         DateTime    @default(now())
+  id        String   @id
+  email     String
+  firstName String
+  lastName  String
+  imageUrl  String?
+  userName  String?  @unique
+  createdAt DateTime @default(now())
 
-  posts Post[]
-  Vote  Vote[]
+  createdSubreddits Subreddit[]
+  posts             Post[]
+  Vote              Vote[]
+  Comment           Comment[]
 }
 
 model Subreddit {
@@ -48,7 +49,8 @@ model Post {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  Vote Vote[]
+  Vote    Vote[]
+  Comment Comment[]
 
   Subreddit Subreddit? @relation(fields: [subName], references: [name])
   subName   String?
@@ -66,9 +68,28 @@ model Vote {
   id String @id @default(uuid())
 
   voteType TypeOfVote
-  
-  Post     Post?      @relation(fields: [postId], references: [id])
-  postId   String?
-  User     User?      @relation(fields: [userId], references: [id])
-  userId   String?
+
+  Post   Post?   @relation(fields: [postId], references: [id])
+  postId String?
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
 }
+
+// user-comment -  user will have one-to-many relation with comment -- one user will have multiple comment, but each comment will have a one user associated
+
+// post-comment -  post will have one-to-many relation with comment -- post can have multiple comments, but each comment must have one post associated
+
+model Comment {
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime @default(now())
+
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  Post   Post?   @relation(fields: [postId], references: [id])
+  postId String?
+}
+
+
+// npx prisma db push -- sync our database with prisma-schema
