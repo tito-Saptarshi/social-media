@@ -1,4 +1,5 @@
 import { handleVote } from "@/app/actions";
+import { CommentForm } from "@/app/components/CommentForm";
 import { CopyLink } from "@/app/components/CopyLink";
 import { RendertoJson } from "@/app/components/RendertoJson";
 import { DownVote, UpVote } from "@/app/components/SubmitButtons";
@@ -105,6 +106,9 @@ export default async function PostPage({ params }: { params: { id: string } }) {
 
               <CopyLink id={params.id} />
             </div>
+
+            <CommentForm />
+
           </div>
         </Card>
       </div>

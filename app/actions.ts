@@ -183,3 +183,12 @@ export async function handleVote(formData: FormData) {
 
   return revalidatePath("/");
 }
+
+export async function createComment() {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) {
+    return redirect("/api/auth/login");
+  }
+}
