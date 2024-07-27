@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { get } from "http";
-import { Cake } from "lucide-react";
+import { Cake, FileQuestion } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -37,9 +37,14 @@ async function getData(name: string, searchParam: string) {
           take: 10,
           skip: searchParam ? (Number(searchParam) - 1) * 10 : 0,
           orderBy: {
-            createdAt: "desc", 
+            createdAt: "desc",
           },
           select: {
+            Comment: {
+              select: {
+                id: true,
+              },
+            },
             title: true,
             imageString: true,
             id: true,
@@ -79,24 +84,39 @@ export default async function SubRedditRoute({
     <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10 ">
       <div className="w-[65%] flex flex-col gap-y-5">
         <CreatePostCard />
+        {data?.posts.length === 0 ? (
+          
+          <div className="flex min-h-[300px] flex-col justify-center items-center rounded-md border border-dashed p-8 text-center">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+              <FileQuestion className="h-10 w-10 text-primary" />
+            </div>
 
-        {data?.posts.map((post) => (
-          <PostCard
-            key={post.id}
-            id={post.id}
-            imageString={post.imageString}
-            subName={data.name}
-            title={post.title}
-            userName={post.User?.userName as string}
-            jsonContent={post.textContent}
-            voteCount={post.Vote.reduce((acc, vote) => {
-              if (vote.voteType === "UP") return acc + 1;
-              if (vote.voteType === "DOWN") return acc - 1;
+            <h2 className="mt-6 text-xl font-semibold">
+              No post have been created
+            </h2>
+          </div>
+        ) : (
+          <>
+            {data?.posts.map((post) => (
+              <PostCard
+                key={post.id}
+                id={post.id}
+                imageString={post.imageString}
+                subName={data.name}
+                title={post.title}
+                commentAmount={post.Comment.length}
+                userName={post.User?.userName as string}
+                jsonContent={post.textContent}
+                voteCount={post.Vote.reduce((acc, vote) => {
+                  if (vote.voteType === "UP") return acc + 1;
+                  if (vote.voteType === "DOWN") return acc - 1;
 
-              return acc;
-            }, 0)}
-          />
-        ))}
+                  return acc;
+                }, 0)}
+              />
+            ))}
+          </>
+        )}
 
         <Pagination totalPages={Math.ceil(count / 10)} />
       </div>
