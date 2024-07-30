@@ -144,7 +144,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
                       {item.User?.userName}
                     </h3>
                   </div>
-                  <p className="ml-10 text-secondary-foreground text-sm tracking-widest">
+                  <p className="ml-10 text-secondary-foreground text-sm tracking-wide">
                     {item.text}
                   </p>
                 </div>
