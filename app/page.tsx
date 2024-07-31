@@ -11,8 +11,11 @@ import { PostCard } from "./components/PostCard";
 import { Suspense } from "react";
 import { SuspenseCard } from "./components/SuspenseCard";
 import Pagination from "./components/Pagination";
-
+import { unstable_noStore as noStore } from "next/cache";
+// NEXT caching - page has to be pre-rendered, but we are fetching data which has to be dynacmic 
+// caching = pre-rendering
 async function getData(searchParam: String) {
+  noStore();
   const [count, data] = await prisma.$transaction([
     prisma.post.count(),
 
